@@ -17,7 +17,7 @@
 │   ├── 02_specification.md         # Наше утвержденное ТЗ и план работ (из прошлого шага)
 │   ├── 03_architecture.md          # Описание логики работы (схемы трафика, SNI, Reality)
 │   └── 04_security_log.md          # Лог решений по безопасности (UFW, Docker iptables)
-│   └── 05_interconnection_log.md   # Журнал взаимодействия с ИИ (заметки, выводы, материал для ретроспективы)
+│   └── 05_interconnection_log.md   # Журнал взаимодействия с ИИ (материал для ретроспективы)
 └── src/                            # Конфигурационные файлы (Configuration-as-Code)
     ├── docker/                     # (Будущее) Docker-compose и Docker-файлы
     └── nginx/                      # (Будущее) Конфиги Nginx (nginx.conf, stream.d/, conf.d/)
