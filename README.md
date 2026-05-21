@@ -24,10 +24,13 @@
 ```
 
 ## 🧭 Навигация по проекту
-- План и ТЗ: [docs/02_specification.md](docs/02_specification.md)
-- Архитектура потоков данных: [docs/03_architecture.md](docs/03_architecture.md)
+- План и ТЗ: [docs/02_specification.md](./docs/02_specification.md)
+- Лог архитектурных решений (ADR): [docs/03_architecture.md](./docs/03_architecture.md)
+- Лог решений по безопасности: [docs/04_security_log.md](./docs/04_security_log.md)
 
 ## 🔄 Текущий статус
 - [x] Сформулированы требования и утверждено ТЗ.
-- [ ] Исследование Пункта 1 плана (SNI-Proxying & Reality).
+- [x] Исследование Пункта 1 плана (SNI-Proxying & Reality).
+- [x] Исследование Пункта 3 плана (Docker-изация панели 3X-UI и сохранение CLI-функционала).
+- [ ] Исследование Пункта 2 плана (Выпуск Wildcard-сертификатов через DuckDNS).
 
