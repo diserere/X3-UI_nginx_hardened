@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 1. Подсистема автоматического выпуска сертификатов
   certbot:
     image: infinityofspace/certbot_dns_duckdns:latest
     container_name: certbot
@@ -14,3 +15,45 @@ services:
       # Монтируем наш кастомный скрипт автоматизации
       - ./src/certbot/entrypoint.sh:/entrypoint.sh:ro
     entrypoint: ["/bin/bash", "/entrypoint.sh"]
+    networks:
+      - vpn_network
+
+  # 2. Фронтенд: Реверс-прокси (L4 Stream + L7 HTTP)
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "443:443" # Открываем наружу ТОЛЬКО стандартный порт HTTPS
+    volumes:
+      # Главный конфиг со stream-модулем
+      - ./src/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # Конфиг веб-сервисов (админка и подписки)
+      - ./src/nginx/conf.d:/etc/nginx/conf.d:ro
+      # Общая папка с сертификатами (в режиме Read-Only)
+      - ./data/certs:/etc/letsencrypt:ro
+      # Папка для статической веб-заглушки
+      - ./src/nginx/html:/usr/share/nginx/html:ro
+    depends_on:
+      - certbot
+    networks:
+      - vpn_network
+
+  # 3. Бэкенд: Панель управления 3X-UI и ядро Xray
+  3x-ui:
+    image: ghcr.io/m0hsenafshar/3x-ui:latest # Используем актуальный Docker-образ панели
+    container_name: 3x-ui
+    restart: unless-stopped
+    environment:
+      - XRAY_VMESS_AEAD_FORCED=false # Опционально для совместимости со старыми клиентами
+    volumes:
+      # База данных, где хранятся настройки панели и пользователей
+      - ./data/3x-ui:/etc/x-ui
+    # ВАЖНО: Мы НЕ пробрасываем порты панели (32180, 32196, 8443) наружу!
+    # Они будут доступны ТОЛЬКО внутри изолированной docker-сети для Nginx.
+    networks:
+      - vpn_network
+
+networks:
+  vpn_network:
+    driver: bridge
