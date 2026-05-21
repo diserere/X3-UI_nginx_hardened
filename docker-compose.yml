@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  certbot:
+    image: infinityofspace/certbot_dns_duckdns:latest
+    container_name: certbot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # Bind Mount: сохраняем сертификаты в папку на хосте для удобства отладки
+      - ./data/certs:/etc/letsencrypt
+      - ./data/certbot_var:/var/lib/letsencrypt
+      # Монтируем наш кастомный скрипт автоматизации
+      - ./src/certbot/entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
